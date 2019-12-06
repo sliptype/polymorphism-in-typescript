@@ -4,6 +4,7 @@ module.exports = {
     description: `A presentation for the Dallas React Meetup`,
     author: `@sliptype`,
   },
+  pathPrefix: "/polymorphism-in-typescript",
   plugins: [
     `gatsby-plugin-react-helmet`,
     `gatsby-theme-mdx-deck`,
