@@ -1,11 +1,13 @@
-interface Appendable<T> {
-  append(a: Appendable<T>): Appendable<T>;
+interface Appendable<ElementType> {
+  append(
+    end: Appendable<ElementType>
+  ): Appendable<ElementType>;
 }
 
 const appendPolymorphic = <Type extends Appendable<any>>(
-  a: Type,
-  b: Type
-): Type => a.append(b) as Type;
+  beginning: Type,
+  end: Type
+): Type => beginning.append(end) as Type;
 
 class _String implements Appendable<string> {
   public value: string;
@@ -14,8 +16,8 @@ class _String implements Appendable<string> {
     this.value = value;
   }
 
-  append(a: _String): _String {
-    return new _String(`${this.value}${a.value}`);
+  append(end: _String): _String {
+    return new _String(`${this.value}${end.value}`);
   }
 }
 
@@ -34,8 +36,8 @@ class _Number implements Appendable<number> {
     this.value = value;
   }
 
-  append(a: _Number): _Number {
-    return new _Number(this.value + a.value);
+  append(end: _Number): _Number {
+    return new _Number(this.value + end.value);
   }
 }
 
@@ -47,87 +49,156 @@ console.log(
 );
 // 2
 
-const mapArray = <T, U>(
-  fn: (a: T) => U,
-  array: T[]
-): U[] => [fn(array[0])];
+const mapArray = <ElementType, ResultType>(
+
+  // A mapping function
+  mapper: (currentElement: ElementType) => ResultType,
+
+  // An array containing data
+  array: ElementType[]
+
+): ResultType[] => [mapper(array[0])];
 
 console.log(
   mapArray(
-    (a: number) => String.fromCharCode(a),
+    (
+      currentElement: number
+    ) => String.fromCharCode(currentElement),
     [100, 101, 102]
   )
 );
 // ["d"]
 
-interface Mappable<T> {
-  map<U>(f: (x: T) => U): Mappable<U>;
+interface Mappable<ElementType> {
+  map<ResultType>(
+
+    // A mapping function
+    mapper: (
+      currentElement: ElementType
+    ) => ResultType
+
+  ): Mappable<ResultType>;
 }
 
-interface Reducable<T> {
-  reduce<U>(f: (a: U, b: T) => U, a: U): U;
-}
+class _List<ElementType> implements Mappable<ElementType> {
 
-class _List<T>
-  implements Appendable<_List<T>>, Mappable<T>, Reducable<T> {
-  public value: T[];
+  public value: ElementType[];
 
-  constructor(value: T[]) {
+  constructor(value: ElementType[]) {
     this.value = value;
   }
 
-  append(a: _List<T>): _List<T> {
-    return new _List([...this.value, ...a.value]);
+  map<ResultType>(
+
+    // A mapping function
+    mapper: (currentElement: ElementType) => ResultType
+  ) {
+    return this.value.map(mapper);
   }
 
-  map<U>(f: (x: T) => U) {
-    return this.value.map(f);
-  }
-
-  reduce<U>(f: (x: U, y: T) => U, a: U) {
-    return this.value.reduce(f, a);
-  }
 }
 
-const mapPolymorphic = <T, U>(
-  fn: (a: T) => U,
-  xs: Mappable<T>
-): Mappable<U> => xs.map(fn);
+const mapPolymorphic = <ElementType, ResultType>(
+  mapper: (currentElement: ElementType) => ResultType,
+  data: Mappable<ElementType>
+): Mappable<ResultType> => data.map(mapper);
 
 console.log(
   mapPolymorphic(
-    (a: number) => String.fromCharCode(a),
+    (currentElement: number) => String.fromCharCode(currentElement),
     new _List([100, 101, 102])
   )
 );
 // ["d", "e", "f"]
 
-const reduceArray = <T, U>(
-  reducer: (accumulator: U, current: T) => U,
-  initialValue: U,
-  array: T[]
+const reduceArray = <ElementType, ResultType>(
+
+  // A reducer function
+  reducer: (
+    accumulator: ResultType,
+    currentElement: ElementType
+  ) => ResultType,
+
+  // The initial value
+  initialValue: ResultType,
+
+  // The array containing data
+  array: ElementType[]
 ) => array.slice(0, 1).reduce(reducer, initialValue);
 
 console.log(
   reduceArray(
-    (accumulator: number, current: string) =>
-      current.charCodeAt(0) + accumulator,
+    (accumulator: number, currentElement: string) =>
+      currentElement.charCodeAt(0) + accumulator,
     0,
     ["a", "b", "c"]
   )
 );
 // 97
 
-const reducePolymorphic = <R extends Reducable<T>, T, U>(
-  fn: (x: U, y: T) => U,
-  a: U,
-  xs: R
-) => xs.reduce(fn, a);
+interface Reducable<ElementType> {
+  reduce<ResultType>(
+
+    // A reducer function
+    reducer: (
+      accumulator: ResultType,
+      currentElement: ElementType
+    ) => ResultType,
+
+    // The initial value
+    initialValue: ResultType
+  ): ResultType;
+}
+
+class _List<ElementType> implements Reducable<ElementType> {
+
+  public value: ElementType[];
+
+  constructor(value: ElementType[]) {
+    this.value = value;
+  }
+
+  reduce<ResultType>(
+
+    // A reducer function
+    reducer: (
+      accumulator: ResultType,
+      currentElement: ElementType
+    ) => ResultType,
+
+    // The initial value
+    initialValue: ResultType
+
+  ) {
+    return this.value.reduce(reducer, initialValue);
+  }
+}
+
+const reducePolymorphic = <ElementType, ResultType>(
+
+  // A reducer function
+  reducer: (x: ResultType, y: ElementType) => ResultType,
+
+  // The initial value
+  initialValue: ResultType,
+
+  // The container containing data
+  data: Reducable<ElementType>
+) => data.reduce(reducer, initialValue);
 
 console.log(
   reducePolymorphic(
-    (a: number, b: string) => b.charCodeAt(0) + a,
+
+    // A reducer function
+    (
+      accumulator: number,
+      currentElement: string
+    ) => currentElement.charCodeAt(0) + accumulator,
+
+    // The initial value
     0,
+
+    // The container containing data
     new _List(["a", "b", "c"])
   )
 );

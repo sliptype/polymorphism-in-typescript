@@ -51,27 +51,27 @@ export const theme = nightOwl;
 <CodeSurfer>
 
 ```ts title="Type Signatures" subtitle="Define the inputs and outputs for a function"
-  const identity = (
-    a: string
-  ): string => a
+  // Return the string that is passed in
+  const identity = (myString: string): string
+    => myString
 ```
 
 ```ts title="Monomorphic Functions" subtitle="Have a large implementation space"
-  const identity = (
-    a: string
-  ): string => 'Hello, Mr. Bug'
+  // Return the string that is passed in
+  const identity = (myString: string): string
+    => 'Hello, Mr. Bug'
 ```
 
 ```ts title="Monomorphic Functions" subtitle="Duplicate logic for multiple data types"
-  const identity = (
-    a: number
-  ): number => a
+  // Return the number that is passed in
+  const identity = (myNumber: number): number
+    => myNumber
 ```
 
 ```ts title="Type Parameters" subtitle="Allow for a more generic implementation of the function"
-  const identity = <T>(
-    a: T
-  ): T => a
+  // Return the value of type MyType that is passed in
+  const identity = <MyType>(x: MyType): MyType
+    => x
 ```
 
 </CodeSurfer>
@@ -134,7 +134,7 @@ console.log(appendString("hello ", "how are you?"));
   All we really need to know about the argument for <Code>appendString</Code> is that it is appendable.
 </Text>
 
-```ts 1:3 file=./polymorphism.ts title="Appendable Interface"
+```ts 1:5 file=./polymorphism.ts title="Appendable Interface"
 ```
 
 </Step>
@@ -145,7 +145,7 @@ console.log(appendString("hello ", "how are you?"));
   This function only has four possible implementations!
 </Text>
 
-```ts 5:8 file=./polymorphism.ts title="Polymorphic Append"
+```ts 7:10 file=./polymorphism.ts title="Polymorphic Append"
 ```
 
 </Step>
@@ -156,7 +156,7 @@ console.log(appendString("hello ", "how are you?"));
   TypeScript enables us to implement this interface for our own <Code>_String</Code> type.
 </Text>
 
-```ts 10:20 file=./polymorphism.ts title="Implementing Appendable"
+```ts 12:22 file=./polymorphism.ts title="Implementing Appendable"
 ```
 
 </Step>
@@ -167,7 +167,7 @@ console.log(appendString("hello ", "how are you?"));
   This results in a function that has more utility and fewer possible implementations.
 </Text>
 
-```ts 22:28 file=./polymorphism.ts title="Polymorphic Append"
+```ts 24:30 file=./polymorphism.ts title="Polymorphic Append"
 ```
 
 </Step>
@@ -178,7 +178,7 @@ console.log(appendString("hello ", "how are you?"));
   We can give any type of data the "appendability" property by implementing the interface.
 </Text>
 
-```ts 30:40 file=./polymorphism.ts title="Implementing Appendable"
+```ts 32:42 file=./polymorphism.ts title="Implementing Appendable"
 ```
 
 </Step>
@@ -189,7 +189,7 @@ console.log(appendString("hello ", "how are you?"));
   This allows reuse of our function.
 </Text>
 
-```ts 41:48 file=./polymorphism.ts title="Polymorphic Append"
+```ts 43:50 file=./polymorphism.ts title="Polymorphic Append"
 ```
 
 </Step>
@@ -200,7 +200,7 @@ console.log(appendString("hello ", "how are you?"));
   Fully specifying container types, like arrays, also presents problems.
 </Text>
 
-```ts 50:62 file=./polymorphism.ts title="Monomorphic Map"
+```ts 52:70 file=./polymorphism.ts title="Monomorphic Map"
 ```
 
 </Step>
@@ -219,7 +219,7 @@ console.log(appendString("hello ", "how are you?"));
   </div>
 </Text>
 
-```ts 63:66 file=./polymorphism.ts title="Mappable Interface"
+```ts 72:81 file=./polymorphism.ts title="Mappable Interface"
 ```
 
 </Step>
@@ -227,10 +227,10 @@ console.log(appendString("hello ", "how are you?"));
 <Step>
 
 <Text>
-  To make use of this, we can create a <Code>_List</Code> code that implements <Code>Appendable</Code>
+  To make use of this, we can create a <Code>_List</Code> class that implements <Code>Mappable</Code>
 </Text>
 
-```ts 71:90 file=./polymorphism.ts title="Implementing Mappable"
+```ts 83:100 file=./polymorphism.ts title="Implementing Mappable"
 ```
 
 </Step>
@@ -241,7 +241,7 @@ console.log(appendString("hello ", "how are you?"));
   This function only has one possible implementation!
 </Text>
 
-```ts 92:95 file=./polymorphism.ts title="Polymorphic Map"
+```ts 101:105 file=./polymorphism.ts title="Polymorphic Map"
 ```
 
 </Step>
@@ -252,7 +252,7 @@ console.log(appendString("hello ", "how are you?"));
   The implementation space is reduced from infinity to 1.
 </Text>
 
-```ts 97:103 file=./polymorphism.ts title="Polymorphic Map"
+```ts 106:113 file=./polymorphism.ts title="Polymorphic Map"
 ```
 
 </Step>
@@ -263,7 +263,7 @@ console.log(appendString("hello ", "how are you?"));
   Another example is reduce
 </Text>
 
-```ts 105:110 file=./polymorphism.ts title="Monomorphic Reduce"
+```ts 113:128 file=./polymorphism.ts title="Monomorphic Reduce"
 ```
 
 </Step>
@@ -274,7 +274,7 @@ console.log(appendString("hello ", "how are you?"));
   Because the types are fully specified, our function implementation has too much wiggle room.
 </Text>
 
-```ts 111:119 file=./polymorphism.ts title="Monomorphic Reduce"
+```ts 129:138 file=./polymorphism.ts title="Monomorphic Reduce"
 ```
 
 </Step>
@@ -285,7 +285,7 @@ console.log(appendString("hello ", "how are you?"));
   We can create another interface to represent the ability to reduce, or aggregate, the contents of a container.
 </Text>
 
-```ts 67:69 file=./polymorphism.ts title="Reducable Interface"
+```ts 139:152 file=./polymorphism.ts title="Reducable Interface"
 ```
 
 </Step>
@@ -296,7 +296,7 @@ console.log(appendString("hello ", "how are you?"));
   Our <Code>_List</Code> class implements <Code>Reducable</Code>.
 </Text>
 
-```ts 71:90 file=./polymorphism.ts title="Implementing Reducable"
+```ts 152:176 file=./polymorphism.ts title="Implementing Reducable"
 ```
 
 </Step>
@@ -307,7 +307,7 @@ console.log(appendString("hello ", "how are you?"));
   We can define our polymorphic <Code>reduce</Code> like so
 </Text>
 
-```ts 120:125 file=./polymorphism.ts title="Polymorphic Reduce"
+```ts 177:187 file=./polymorphism.ts title="Polymorphic Reduce"
 ```
 
 </Step>
@@ -318,7 +318,7 @@ console.log(appendString("hello ", "how are you?"));
   We can be more confident this function does what it says.
 </Text>
 
-```ts 127:135 file=./polymorphism.ts title="Polymorphic Reduce"
+```ts 189:205 file=./polymorphism.ts title="Polymorphic Reduce"
 ```
 
 </Step>
