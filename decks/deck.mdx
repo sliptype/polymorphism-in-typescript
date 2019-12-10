@@ -8,6 +8,7 @@ import { nightOwl, github, oceanicNext, vsDark } from "@code-surfer/themes";
 import { Code } from "./code.js";
 import { Definition } from "./definition.js";
 import { Text } from "./text.js";
+import { extraTheme } from "./extra-theme.js";
 
 export const theme = nightOwl;
 
@@ -32,7 +33,7 @@ export const theme = nightOwl;
 ---
 
 <Definition
-  syllables={['pol', 'y', 'morph', 'ism']}
+  syllables={['pol', 'y', 'morph', 'is', 'm']}
   type={'noun'}
   definition={'the condition of occurring in several different forms.'}
   />
@@ -40,7 +41,7 @@ export const theme = nightOwl;
 ---
 
 <Definition
-  syllables={['pol', 'y', 'morph', 'ism']}
+  syllables={['pol', 'y', 'morph', 'is', 'm']}
   type={'noun'}
   definition={'the provision of a single interface to entities of different types or the use of a single symbol to represent multiple different types.'}
   />
@@ -77,7 +78,7 @@ export const theme = nightOwl;
 
 ---
 
-<CodeSurferColumns themes={[github, nightOwl]}>
+<CodeSurferColumns themes={[github]}>
 
 <Step>
 
@@ -125,7 +126,7 @@ console.log(appendString("hello ", "how are you?"));
 
 ---
 
-<CodeSurferColumns themes={[nightOwl, nightOwl]}>
+<CodeSurferColumns themes={[extraTheme, extraTheme]}>
 
 <Step>
 
@@ -248,7 +249,7 @@ console.log(appendString("hello ", "how are you?"));
 <Step>
 
 <Text>
-  The implementation space is reduced f rom infinity to 1.
+  The implementation space is reduced from infinity to 1.
 </Text>
 
 ```ts 97:103 file=./polymorphism.ts title="Polymorphic Map"
